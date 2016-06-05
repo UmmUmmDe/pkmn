@@ -1,18 +1,7 @@
 require("src.tween")
+require("src.event")
 
-Player = class("Player", {
-	x = 0,
-	y = 0,
-	tx = nil,
-	ty = nil,
-	tween = nil,
-	sprite = nil,
-	inventory = {},
-	party = {},
-	quad = nil,
-	speed = 100,
-	lastDir = false
-})
+Player = Event:extend("Player")
 
 function Player:init(sprite)
 	self.sprite = sprite
@@ -45,45 +34,32 @@ function Player:draw()
 end
 
 function Player:update(dt, map)
-	if self.tween and self.tween.done then
-		self.tween = nil
-	elseif not self.tween then
+	self.super.update(self, dt, map)
+	if not self.tween then
 		local x, y = 0, 0
-		if lk.isDown("w") then
+		if isDown("up") then
 			y = y - 1
 		end
-		if lk.isDown("s") then
+		if isDown("down") then
 			y = y + 1
 		end
-		if lk.isDown("a") then
+		if isDown("left") then
 			x = x - 1
 		end
-		if lk.isDown("d") then
+		if isDown("right") then
 			x = x + 1
 		end
-		if lk.isDown("lshift") then
+		if isDown("run") then
 			self.speed = 200
 		else
 			self.speed = 100
 		end
-		self:move(x, y, map)
-	end
-end
-
-function Player:move(x, y, map)
-	if x ~= 0 or y ~= 0 then
-		if x ~= 0 and y ~= 0 then
-			if lastDir then
-				x = 0
-			else
-				y = 0
+		if x ~= 0 or y ~= 0 then
+			self:move(x, y, map)
+		else
+			if isDown("interact") and just("interact") then
+				self:interact(map)
 			end
-		end
-		lastDir = x ~= 0
-		if not map:isSolid(self.x + x, self.y + y, x, y, math.abs(y) * TILE, math.abs(x) * TILE) then
-			self.tween = Tween(self.x * TILE, self.y * TILE, self.x * TILE + x * TILE, self.y * TILE + y * TILE, self.speed)
-			self.x = self.x + x
-			self.y = self.y + y
 		end
 	end
 end

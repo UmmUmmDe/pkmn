@@ -1,4 +1,6 @@
-local xml = require("src.xml").newParser()
+XML = require("src.xml")
+local xml = XML.newParser()
+require("src.tiled.defaults")
 require("src.tiled.tileset")
 require("src.tiled.layer")
 require("src.tiled.objectgroup")
@@ -13,7 +15,8 @@ Map = class("Map", {
 	tilesets = {},
 	layers = {},
 	entities = {},
-	collisions = {}
+	collisions = {},
+	scripts = {}
 })
 
 function Map:init(filename)
@@ -36,6 +39,14 @@ function Map:init(filename)
 			end
 		end
 		self.obj = obj
+		for _, v in pairs(self.entities) do
+			if v.props.script and not self.scripts[v.props.script] then
+				self.scripts[v.props.script] = dofile("scripts/" .. v.props.script .. ".lua")
+				if self.scripts[v.props.script][v.props.funcInit] then
+					self.scripts[v.props.script][v.props.funcInit](v, self)
+				end
+			end
+		end
 	else
 		error(err)
 	end
@@ -85,5 +96,37 @@ function Map:isSolid(x, y, x1, y1, w, h)
 			return true
 		end
 	end
+	x, y = x / TILE, y / TILE
+	for _, v in pairs(self.entities) do
+		if v.x == x and v.y == y then
+			return true
+		end
+	end
 	return false
+end
+
+function Map:interact(x, y, other)
+	for _, v in pairs(self.entities) do
+		if v.x == x and v.y == y then
+			v:interact(other, self)
+		end
+	end
+end
+
+function Map:movedTo(oldX, oldY, other)
+	for _, v in pairs(self.entities) do
+		if v.x == other.x and v.y == other.y then
+			v:touch(other, self)
+		end
+	end
+end
+
+function Map:getEventsAt(x, y)
+	local tbl = {}
+	for _, v in pairs(self.entities) do
+		if v.x == x and v.y == y then
+			table.insert(tbl, v)
+		end
+	end
+	return tbl
 end

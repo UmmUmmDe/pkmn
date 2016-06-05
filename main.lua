@@ -23,11 +23,25 @@ lw = love.window
 
 if lf.exists("scripts/override.lua") then
 	require("scripts.override")
+	override = true
 end
 
 inspect = require("src.inspect")
 class = require("src.30log")
 States = require("src.states")
+
+Keys = require("config.keys")
+local obj = {}
+for k, v in pairs(Keys) do
+	obj[k] = {
+		def = v,
+		pressed = false,
+		just = false
+	}
+end
+Keys = obj
+obj = nil
+
 require("src.tiled")
 require("src.loader")
 require("src.player")
@@ -40,6 +54,22 @@ function love.load(args)
 end
 
 function love.update(dt)
+	for k, v in pairs(Keys) do
+		if v.just then
+			v.just = false
+		end
+		local down = false
+		for _, key in pairs(v.def) do
+			if lk.isDown(key) then
+				down = true
+				break
+			end
+		end
+		if down ~= v.pressed then
+			v.just = true
+		end
+		v.pressed = down
+	end
 	if state == States.LOADING then
 		res:loadUpdate(dt)
 	elseif state == States.OVERWORLD then
@@ -63,4 +93,16 @@ function love.keypressed(key)
 	if key == "escape" then
 		le.quit()
 	end
+end
+
+function isDown(code)
+	return Keys[code].pressed
+end
+
+function just(code)
+	return Keys[code].just
+end
+
+function isUp(code)
+	return not isDown(code)
 end

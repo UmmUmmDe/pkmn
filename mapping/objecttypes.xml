@@ -4,9 +4,13 @@
   <property name="type" type="string" default="normal"/>
  </objecttype>
  <objecttype name="Event" color="#ffff00">
-  <property name="funcInteract" type="string"/>
-  <property name="funcTouch" type="string"/>
+  <property name="funcInit" type="string" default="init"/>
+  <property name="funcInteract" type="string" default="interact"/>
+  <property name="funcTouch" type="string" default="touch"/>
+  <property name="funcUpdate" type="string" default="update"/>
   <property name="script" type="string"/>
+  <property name="solid" type="bool"/>
+  <property name="sprite" type="string"/>
  </objecttype>
  <objecttype name="Warp" color="#aa00ff">
   <property name="map" type="string"/>

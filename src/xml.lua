@@ -100,13 +100,13 @@ function newParser()
         return top
     end
 
-    function XmlParser:loadFile(xmlFilename, base)
-        if not base then
+    function XmlParser:loadFile(xmlFilename, base) --Note from UUD: Edited to work without system (whatever that is...).
+        --[[if not base then
             base = system.ResourceDirectory
         end
 
-        local path = system.pathForFile(xmlFilename, base)
-        local hFile, err = io.open(path, "r");
+        local path = system.pathForFile(xmlFilename, base)]]
+        local hFile, err = io.open(xmlFilename, "r");
 
         if hFile and not err then
             local xmlText = hFile:read("*a"); -- read file content
