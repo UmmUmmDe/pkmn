@@ -3,4 +3,15 @@
  <objecttype name="Collision" color="#ff0000">
   <property name="type" type="string" default="normal"/>
  </objecttype>
+ <objecttype name="Event" color="#ffff00">
+  <property name="funcInteract" type="string"/>
+  <property name="funcTouch" type="string"/>
+  <property name="script" type="string"/>
+ </objecttype>
+ <objecttype name="Warp" color="#aa00ff">
+  <property name="map" type="string"/>
+  <property name="target" type="string"/>
+  <property name="x" type="int"/>
+  <property name="y" type="int"/>
+ </objecttype>
 </objecttypes>
