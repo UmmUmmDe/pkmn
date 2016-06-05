@@ -61,20 +61,29 @@ function Player:update(dt, map)
 		if lk.isDown("d") then
 			x = x + 1
 		end
-		if x ~= 0 or y ~= 0 then
-			if x ~= 0 and y ~= 0 then
-				if lastDir then
-					x = 0
-				else
-					y = 0
-				end
+		if lk.isDown("lshift") then
+			self.speed = 200
+		else
+			self.speed = 100
+		end
+		self:move(x, y, map)
+	end
+end
+
+function Player:move(x, y, map)
+	if x ~= 0 or y ~= 0 then
+		if x ~= 0 and y ~= 0 then
+			if lastDir then
+				x = 0
+			else
+				y = 0
 			end
-			lastDir = x ~= 0
-			if not map:isSolid(self.x + x, self.y + y) then
-				self.tween = Tween(self.x * TILE, self.y * TILE, self.x * TILE + x * TILE, self.y * TILE + y * TILE, self.speed)
-				self.x = self.x + x
-				self.y = self.y + y
-			end
+		end
+		lastDir = x ~= 0
+		if not map:isSolid(self.x + x, self.y + y) then
+			self.tween = Tween(self.x * TILE, self.y * TILE, self.x * TILE + x * TILE, self.y * TILE + y * TILE, self.speed)
+			self.x = self.x + x
+			self.y = self.y + y
 		end
 	end
 end
