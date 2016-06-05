@@ -80,7 +80,7 @@ function Player:move(x, y, map)
 			end
 		end
 		lastDir = x ~= 0
-		if not map:isSolid(self.x + x, self.y + y) then
+		if not map:isSolid(self.x + x, self.y + y, x, y, math.abs(y) * TILE, math.abs(x) * TILE) then
 			self.tween = Tween(self.x * TILE, self.y * TILE, self.x * TILE + x * TILE, self.y * TILE + y * TILE, self.speed)
 			self.x = self.x + x
 			self.y = self.y + y
