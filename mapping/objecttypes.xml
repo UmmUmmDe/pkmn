@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="Collision" color="#ff0000">
+  <property name="type" type="string" default="normal"/>
+ </objecttype>
+</objecttypes>
